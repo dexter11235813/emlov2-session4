@@ -1,0 +1,5 @@
+stages:
+  train-cifar10:
+    cmd: python3 src/train.py experiment=cifar10
+    deps:
+      - data/cifar-10-batches-py

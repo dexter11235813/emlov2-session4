@@ -1,0 +1,9 @@
+schema: '2.0'
+stages:
+  train-cifar10:
+    cmd: python3 src/train.py experiment=cifar10
+    deps:
+    - path: data/cifar-10-batches-py
+      md5: 2c2c368a819f1df18fd0afa1c052c6c4.dir
+      size: 186214114
+      nfiles: 8
