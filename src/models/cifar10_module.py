@@ -1,6 +1,8 @@
 from typing import Any, List
 
 import torch
+import torchvision.transforms as T
+import torch.nn.functional as F
 from pytorch_lightning import LightningModule
 from torchmetrics import MaxMetric, MeanMetric, MinMetric
 from torchmetrics.classification.accuracy import Accuracy
@@ -36,7 +38,8 @@ class CIFAR10LitModule(LightningModule):
         self.train_acc = Accuracy()
         self.val_acc = Accuracy()
         self.test_acc = Accuracy()
-
+        self.resize = T.Resize([32])
+        self.normalize = T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         # for averaging loss across batches
         self.train_loss = MeanMetric()
         self.val_loss = MeanMetric()
@@ -48,6 +51,18 @@ class CIFAR10LitModule(LightningModule):
 
     def forward(self, x: torch.Tensor):
         return self.net(x)
+
+    @torch.jit.export
+    def forward_jit(self, x):
+        x = self.normalize(self.resize(x))
+
+        with torch.no_grad():
+            # forward pass
+            logits = self(x)
+
+            preds = F.softmax(logits, dim=-1)
+
+        return preds
 
     def on_train_start(self):
         # by default lightning executes validation step sanity checks before training starts,
