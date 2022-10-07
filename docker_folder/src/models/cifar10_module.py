@@ -39,7 +39,9 @@ class CIFAR10LitModule(LightningModule):
         self.val_acc = Accuracy()
         self.test_acc = Accuracy()
         self.resize = T.Resize([32])
-        self.normalize = T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+        self.normalize = T.Normalize(
+            mean=(0.4914, 0.48216, 0.44653), std=(0.2023, 0.1994, 0.2010)
+        )
         # for averaging loss across batches
         self.train_loss = MeanMetric()
         self.val_loss = MeanMetric()

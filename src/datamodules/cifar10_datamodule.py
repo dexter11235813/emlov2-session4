@@ -4,7 +4,7 @@ import torch
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import ConcatDataset, DataLoader, Dataset, random_split
 from torchvision.datasets import CIFAR10
-from torchvision.transforms import transforms
+import torchvision.transforms as transforms
 
 
 class CIFAR10DataModule(LightningDataModule):
@@ -52,11 +52,25 @@ class CIFAR10DataModule(LightningDataModule):
         # data transformations
         self.transforms = transforms.Compose(
             [
+                transforms.Resize([32]),
+                transforms.RandomHorizontalFlip(),
+                transforms.RandomRotation(2),
                 transforms.ToTensor(),
-                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+                transforms.Normalize(
+                    (0.4914, 0.48216, 0.44653), (0.2023, 0.1994, 0.2010)
+                ),
             ]
         )
 
+        self.valid_transforms = transforms.Compose(
+            [
+                transforms.Resize([32]),
+                transforms.ToTensor(),
+                transforms.Normalize(
+                    mean=[0.4914, 0.48216, 0.44653], std=[0.2023, 0.1994, 0.2010]
+                ),
+            ]
+        )
         self.data_train: Optional[Dataset] = None
         self.data_val: Optional[Dataset] = None
         self.data_test: Optional[Dataset] = None
@@ -81,8 +95,12 @@ class CIFAR10DataModule(LightningDataModule):
         """
         # load and split datasets only if not loaded already
         if not self.data_train and not self.data_val and not self.data_test:
-            trainset = CIFAR10(self.hparams.data_dir, train=True, transform=self.transforms)
-            testset = CIFAR10(self.hparams.data_dir, train=False, transform=self.transforms)
+            trainset = CIFAR10(
+                self.hparams.data_dir, train=True, transform=self.transforms
+            )
+            testset = CIFAR10(
+                self.hparams.data_dir, train=False, transform=self.valid_transforms
+            )
             dataset = ConcatDataset(datasets=[trainset, testset])
             self.data_train, self.data_val, self.data_test = random_split(
                 dataset=dataset,

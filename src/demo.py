@@ -50,7 +50,7 @@ def demo(cfg: DictConfig) -> Tuple[dict, dict]:
     transforms = T.Compose(
         [
             T.ToTensor(),
-            T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+            T.Normalize((0.4914, 0.48216, 0.44653), (0.2023, 0.1994, 0.2010)),
         ]
     )
     cifar10_labels = requests.get(

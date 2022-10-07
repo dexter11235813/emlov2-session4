@@ -1,0 +1,5 @@
+outs:
+- md5: a29a3bea077b2467c2c30b769849caf1
+  size: 44905209
+  isexec: true
+  path: model.script.pt
