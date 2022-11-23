@@ -1,7 +1,7 @@
 # --------- pytorch --------- #
 https://download.pytorch.org/whl/cpu/torch-1.10.1%2Bcpu-cp39-cp39-linux_x86_64.whl
 https://download.pytorch.org/whl/cpu/torchvision-0.11.2%2Bcpu-cp39-cp39-linux_x86_64.whl
-pytorch-lightning==1.7.1
+pytorch-lightning==1.8.3
 torchmetrics==0.9.3
 
 # --------- hydra --------- #
